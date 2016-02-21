@@ -113,35 +113,23 @@ prompt_git() {
     fi
 
 
-  git_status="$(git status 2> /dev/null)"
-  remote_pattern="Your branch is (.*) '"
-  diverge_pattern="Your branch and (.*) have diverged"
-  branch="$(git branch -vv 2> /dev/null |grep "*" |cut -d'[' -f2 |cut -d: -f1)"
-  if [[ ${git_status} =~ ${remote_pattern} ]]; then
-    if [[ ${BASH_REMATCH[1]} == "up-to-date with"  ]]; then
-      remote=""
-    else
-      if [[ ${BASH_REMATCH[1]} == "ahead of" ]]; then
-        count="$(git rev-list --count --left-right $output...HEAD 2>/dev/null)"
-        p="${count#0	}"
-        if [[ ${p} > 0 ]]; then
-          mode=" ${p} ⬆︎"
-        fi
-      else
-        count="$(git rev-list --count --left-right $output...HEAD 2>/dev/null)"
-        p="${count%	0}"
-        if [[ ${p} > 0 ]]; then
-          mode=" ⬇︎ ${p}"
-        fi
-      fi
+  local remote ahead behind git_remote_status git_remote_status_detailed p
+  remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
+
+    if [[ -n ${remote} ]]; then
+      ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+      behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+
+    if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
+       p=$((ahead))
+      mode=" ${p}⬆︎"
+    elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
+      p=$((behind))
+      mode=" ⬇︎${behind}"
+    elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
+      mode="↕"
     fi
   fi
-  if [[ ${git_status} =~ ${diverge_pattern} ]]; then
-    mode=" ↕"
-  fi
-
-
-
 
     setopt promptsubst
     autoload -Uz vcs_info
