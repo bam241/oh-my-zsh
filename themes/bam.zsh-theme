@@ -198,9 +198,7 @@ build_prompt() {
   prompt_dir
   prompt_end
 }
-#prompt_git
-#prompt_hg
-#
+
 
 r_build_prompt() {
 prompt_git
