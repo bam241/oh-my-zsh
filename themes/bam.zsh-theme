@@ -116,9 +116,7 @@ prompt_git() {
   git_status="$(git status 2> /dev/null)"
   remote_pattern="Your branch is (.*) '"
   diverge_pattern="Your branch and (.*) have diverged"
-#  branch="$(git branch -vv 2> /dev/null |grep "*" |cut -d[ -f2 |cut -d: -f1)"
-local output="$(git config -z --get-regexp '^(svn-remote\..*\.url|bash\.showupstream)$' 2>/dev/null | tr '\0\n' '\n ')"
-
+  branch="$(git branch -vv 2> /dev/null |grep "*" |cut -d'[' -f2 |cut -d: -f1)"
   if [[ ${git_status} =~ ${remote_pattern} ]]; then
     if [[ ${BASH_REMATCH[1]} == "up-to-date with"  ]]; then
       remote=""
