@@ -116,18 +116,19 @@ prompt_git() {
   git_status="$(git status 2> /dev/null)"
   remote_pattern="Your branch is (.*) '"
   diverge_pattern="Your branch and (.*) have diverged"
-  branch="$(git branch -vv 2> /dev/null |grep "*" |cut -d[ -f2 |cut -d: -f1)"
+#  branch="$(git branch -vv 2> /dev/null |grep "*" |cut -d[ -f2 |cut -d: -f1)"
+local output="$(git config -z --get-regexp '^(svn-remote\..*\.url|bash\.showupstream)$' 2>/dev/null | tr '\0\n' '\n ')"
 
   if [[ ${git_status} =~ ${remote_pattern} ]]; then
     if [[ ${BASH_REMATCH[1]} == "up-to-date with"  ]]; then
       remote=""
     else
       if [[ ${BASH_REMATCH[1]} == "ahead of" ]]; then
-        count="$(git rev-list --count --left-right $branch...HEAD 2>/dev/null)"
+        count="$(git rev-list --count --left-right $output...HEAD 2>/dev/null)"
         p="${count#0	}"
         mode="${p}⬆︎"
       else
-        count="$(git rev-list --count --left-right $branch...HEAD 2>/dev/null)"
+        count="$(git rev-list --count --left-right $output...HEAD 2>/dev/null)"
         p="${count%	0}"
         mode="⬇︎${p}"
       fi
