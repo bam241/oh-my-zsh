@@ -124,11 +124,15 @@ prompt_git() {
       if [[ ${BASH_REMATCH[1]} == "ahead of" ]]; then
         count="$(git rev-list --count --left-right $output...HEAD 2>/dev/null)"
         p="${count#0	}"
-        mode="${p}⬆︎"
+        if [[ ${p} > 0 ]]; then
+          mode=" ${p} ⬆︎"
+        fi
       else
         count="$(git rev-list --count --left-right $output...HEAD 2>/dev/null)"
         p="${count%	0}"
-        mode="⬇︎${p}"
+        if [[ ${p} > 0 ]]; then
+          mode=" ⬇︎ ${p}"
+        fi
       fi
     fi
   fi
