@@ -120,21 +120,21 @@ prompt_git() {
 
   if [[ ${git_status} =~ ${remote_pattern} ]]; then
     if [[ ${BASH_REMATCH[1]} == "up-to-date with"  ]]; then
-      remote="${YELLOW}"
+      remote=""
     else
       if [[ ${BASH_REMATCH[1]} == "ahead of" ]]; then
         count="$(git rev-list --count --left-right $branch...HEAD 2>/dev/null)"
         p="${count#0	}"
-        remote="${LIGHT_YELLOW}${p}Ʌ"
+        mode="${p}⬆︎"
       else
         count="$(git rev-list --count --left-right $branch...HEAD 2>/dev/null)"
         p="${count%	0}"
-        remote="${LIGHT_YELLOW}${p}V"
+        mode="⬇︎${p}"
       fi
     fi
   fi
   if [[ ${git_status} =~ ${diverge_pattern} ]]; then
-    remote="${YELLOW}↕"
+    mode=" ↕"
   fi
 
 
