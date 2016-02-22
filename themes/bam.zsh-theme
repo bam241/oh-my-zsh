@@ -125,7 +125,7 @@ prompt_git() {
       mode=" ${p}⬆︎"
     elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
       p=$((behind))
-      mode=" ⬇︎${behind}"
+      mode=" ⬇︎ ${p}"
     elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
       mode="↕"
     fi
