@@ -84,6 +84,33 @@ prompt_context() {
   fi
 }
 
+# Dir: current working directory
+prompt_dir() {
+  prompt_segment blue black '%~'
+}
+
+# Virtualenv: current working virtualenv
+prompt_virtualenv() {
+  local virtualenv_path="$VIRTUAL_ENV"
+  if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
+    prompt_segment blue black "(`basename $virtualenv_path`)"
+  fi
+}
+
+# Status:
+# - was there an error
+# - am I root
+# - are there background jobs?
+prompt_status() {
+  local symbols
+  symbols=()
+  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
+  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
+  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
+
+  [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
+}
+
 # Git: branch/detached head, dirty status
 prompt_git() {
 
@@ -147,32 +174,85 @@ prompt_git() {
 }
 
 
-# Dir: current working directory
-prompt_dir() {
-  prompt_segment blue black '%~'
-}
-
-# Virtualenv: current working virtualenv
-prompt_virtualenv() {
-  local virtualenv_path="$VIRTUAL_ENV"
-  if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-    prompt_segment blue black "(`basename $virtualenv_path`)"
+# svn Prompt
+function svn_prompt() {
+  if svn_is_inside; then
+    local ref dirty
+    if svn_parse_dirty; then
+      dirty=$ZSH_THEME_SVN_PROMPT_DIRTY
+    fi
+    echo -n " $(svn_branch_name) $(svn_rev)$dirty"
   fi
 }
 
-# Status:
-# - was there an error
-# - am I root
-# - are there background jobs?
-prompt_status() {
-  local symbols
-  symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
-
-  [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
+function svn_is_inside() {
+  if $(svn info >/dev/null 2>&1); then
+    return 0
+  fi
+  return 1
 }
+
+function svn_parse_dirty() {
+  if svn_is_inside; then
+    root=`svn info 2> /dev/null | sed -n 's/^Working Copy Root Path: //p'`
+    if $(svn status $root 2> /dev/null | grep -Eq '^\s*[ACDIM!?L]'); then
+      return 0
+    fi
+  fi
+  return 1
+}
+
+function svn_repo_name() {
+  if svn_is_inside; then
+    svn info | sed -n 's/Repository\ Root:\ .*\///p' | read SVN_ROOT
+    svn info | sed -n "s/URL:\ .*$SVN_ROOT\///p"
+  fi
+}
+
+function svn_branch_name() {
+  if svn_is_inside; then
+    svn info 2> /dev/null | \
+      awk -F/ \
+      '/^URL:/ { \
+        for (i=0; i<=NF; i++) { \
+          if ($i == "branches" || $i == "tags" ) { \
+            print $(i+1); \
+            break;\
+          }; \
+          if ($i == "trunk") { print $i; break; } \
+        } \
+      }'
+  fi
+}
+
+function svn_rev() {
+  if svn_is_inside; then
+    svn info 2> /dev/null | sed -n 's/Revision:\ //p'
+  fi
+}
+
+
+prompt_svn() {
+
+  local PL_BRANCH_CHAR
+  () {
+    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+    PL_BRANCH_CHAR=$'\ue0a0'         # 
+  }
+  if svn_is_inside; then
+    ZSH_THEME_SVN_PROMPT_DIRTY='±'
+    local ref dirty
+    if svn_parse_dirty; then
+      dirty=$ZSH_THEME_SVN_PROMPT_DIRTY
+      prompt_segment yellow black
+    else
+      prompt_segment green black
+    fi
+    echo -n "$PL_BRANCH_CHAR $(svn_branch_name) $(svn_rev)$dirty"
+  fi
+
+}
+
 
 ## Main prompt
 build_prompt() {
@@ -187,6 +267,7 @@ build_prompt() {
 
 r_build_prompt() {
 prompt_git
+prompt_svn
 }
 
 
