@@ -191,6 +191,6 @@ prompt_git
 
 
 
-PROMPT='%{%f%b%k%}$(build_prompt) '
+PROMPT='%{%f%b%k%}$(build_prompt)'
 
 RPS1=' $(r_build_prompt) '
