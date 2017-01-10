@@ -141,7 +141,6 @@ prompt_git() {
       mode=" >R>"
     fi
 
-
   local remote ahead behind git_remote_status git_remote_status_detailed p
   remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
 
@@ -151,12 +150,12 @@ prompt_git() {
 
     if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
        p=$((ahead))
-      mode=" ${p}⬆︎"
+      mode=" ${p}%1{⬆︎%}"
     elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
       p=$((behind))
-      mode=" ⬇︎ ${p}"
+      mode=" %1{⬇︎%} ${p}"
     elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
-      mode="↕"
+      mode=" %1{↕%}"
     fi
   fi
 
@@ -166,8 +165,8 @@ prompt_git() {
     zstyle ':vcs_info:*' enable git
     zstyle ':vcs_info:*' get-revision true
     zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' stagedstr '✚'
-    zstyle ':vcs_info:*' unstagedstr '●'
+    zstyle ':vcs_info:*' stagedstr '%1{✚%}'
+    zstyle ':vcs_info:*' unstagedstr '%1{●%}'
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
     vcs_info
