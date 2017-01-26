@@ -85,26 +85,33 @@ prompt_context() {
     COMP="%m"
   fi
   
+  export PROMP_COLOR='blue' 
   
   if [[ $UID -ne 0 ]]; then # normal user
     if [[ "$USER" != "$DEFAULT_USER" ]]; then
       if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
         prompt_segment black 128 "%(!.%{%F{purple}%}.)$USER@$COMP"
+        export PROMP_COLOR='128' 
       else
-        prompt_segment black green "%(!.%{%F{yellow}%}.)$USER@$COMP"
+        prompt_segment black blue "%(!.%{%F{yellow}%}.)$USER@$COMP"
+        export PROMP_COLOR='blue' 
       fi
     else
       if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
         prompt_segment black 128 "%(!.%{%F{purple}%}.)$COMP"
+        export PROMP_COLOR='128' 
       else
-        prompt_segment black green "%(!.%{%F{yellow}%}.)$COMP"
+        prompt_segment black blue "%(!.%{%F{yellow}%}.)$COMP"
+        export PROMP_COLOR='blue' 
       fi
     fi
   else # root
       if [[ "$USER" != "$DEFAULT_USER" ]]; then
         prompt_segment black red "%(!.%{%F{red}%}.)$USER@$COMP"
+        export PROMP_COLOR='red' 
       else
         prompt_segment black red "%(!.%{%F{red}%}.)$COMP"
+        export PROMP_COLOR='red' 
       fi
   fi
 }
