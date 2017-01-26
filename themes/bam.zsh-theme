@@ -83,30 +83,21 @@ prompt_context() {
   # Check the UID
   if [[ $UID -ne 0 ]]; then # normal user
     if [[ "$USER" != "$DEFAULT_USER" && ! -n "$SSH_CLIENT" ]]; then
-      prompt_segment black default "%(!.%{%F{yellow}%}.)$USER@%m"
+      prompt_segment black yellow "%(!.%{%F{yellow}%}.)$USER@%m"
     elif [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
       if [[ "$USER" != "$DEFAULT_USER" ]]; then
-        prompt_segment black default "%(!.%{%F{purple}%}.)$USER@%m"
+        prompt_segment black purple "%(!.%{%F{purple}%}.)$USER@%m"
       else
-        prompt_segment black default "%(!.%{%F{purple}%}.)%m"
+        prompt_segment black purple "%(!.%{%F{purple}%}.)%m"
       fi
     fi
   else # root
       if [[ "$USER" != "$DEFAULT_USER" ]]; then
-        prompt_segment black default "%(!.%{%F{red}%}.)$USER@%m"
+        prompt_segment black red "%(!.%{%F{red}%}.)$USER@%m"
       else
-        prompt_segment black default "%(!.%{%F{red}%}.)%m"
+        prompt_segment black red "%(!.%{%F{red}%}.)%m"
       fi
   fi
-  
-
-  # Check if we are on SSH or not
-  if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-    PR_HOST='%F{red}%M%f' # SSH
-  else
-    PR_HOST='%F{green}%M%f' # no SSH
-  fi
-
 }
 
 # Dir: current working directory
