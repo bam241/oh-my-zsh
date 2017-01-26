@@ -89,13 +89,13 @@ prompt_context() {
   if [[ $UID -ne 0 ]]; then # normal user
     if [[ "$USER" != "$DEFAULT_USER" ]]; then
       if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-        prompt_segment black purple "%(!.%{%F{purple}%}.)$USER@$COMP"
+        prompt_segment black 128 "%(!.%{%F{purple}%}.)$USER@$COMP"
       else
         prompt_segment black green "%(!.%{%F{yellow}%}.)$USER@$COMP"
       fi
     else
       if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-        prompt_segment black purple "%(!.%{%F{purple}%}.)$COMP"
+        prompt_segment black 128 "%(!.%{%F{purple}%}.)$COMP"
       else
         prompt_segment black green "%(!.%{%F{yellow}%}.)$COMP"
       fi
