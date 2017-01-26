@@ -80,8 +80,32 @@ prompt_end() {
 
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
-  if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER@%m"
+  # Check the UID
+  if [[ ! -n $COMP ]]; then
+    COMP="%m"
+  fi
+  
+  
+  if [[ $UID -ne 0 ]]; then # normal user
+    if [[ "$USER" != "$DEFAULT_USER" ]]; then
+      if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
+        prompt_segment black purple "%(!.%{%F{purple}%}.)$USER@$COMP"
+      else
+        prompt_segment black green "%(!.%{%F{yellow}%}.)$USER@$COMP"
+      fi
+    else
+      if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
+        prompt_segment black purple "%(!.%{%F{purple}%}.)$COMP"
+      else
+        prompt_segment black green "%(!.%{%F{yellow}%}.)$COMP"
+      fi
+    fi
+  else # root
+      if [[ "$USER" != "$DEFAULT_USER" ]]; then
+        prompt_segment black red "%(!.%{%F{red}%}.)$USER@$COMP"
+      else
+        prompt_segment black red "%(!.%{%F{red}%}.)$COMP"
+      fi
   fi
 }
 
