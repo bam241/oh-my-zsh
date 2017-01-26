@@ -90,7 +90,7 @@ prompt_context() {
   if [[ $UID -ne 0 ]]; then # normal user
     if [[ "$USER" != "$DEFAULT_USER" ]]; then
       if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-        prompt_segment black 092 "%(!.%{%F{purple}%}.)$USER@$COMP"
+        prompt_segment black 092 "%(!.%{%F{purple}%}.)[$USER@$COMP]"
         export PROMP_COLOR='092' 
       else
         prompt_segment black blue "%(!.%{%F{yellow}%}.)[$USER]"
@@ -98,7 +98,7 @@ prompt_context() {
       fi
     else
       if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-        prompt_segment black 092 "%(!.%{%F{purple}%}.)$COMP"
+        prompt_segment black 092 "%(!.%{%F{purple}%}.)[$COMP]"
         export PROMP_COLOR='092' 
       else
         export PROMP_COLOR='blue' 
