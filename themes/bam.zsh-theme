@@ -1,6 +1,6 @@
 # vim:ft=zsh ts=2 sw=2 sts=2
 #
-# agnoster's Theme - https://gist.github.com/3712874
+# agnoster's Theme - https://gist.github.com/3709274
 # A Powerline-inspired theme for ZSH
 #
 # # README
@@ -90,16 +90,16 @@ prompt_context() {
   if [[ $UID -ne 0 ]]; then # normal user
     if [[ "$USER" != "$DEFAULT_USER" ]]; then
       if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-        prompt_segment black 128 "%(!.%{%F{purple}%}.)$USER@$COMP"
-        export PROMP_COLOR='128' 
+        prompt_segment black 092 "%(!.%{%F{purple}%}.)$USER@$COMP"
+        export PROMP_COLOR='092' 
       else
         prompt_segment black blue "%(!.%{%F{yellow}%}.)$USER@$COMP"
         export PROMP_COLOR='blue' 
       fi
     else
       if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-        prompt_segment black 128 "%(!.%{%F{purple}%}.)$COMP"
-        export PROMP_COLOR='128' 
+        prompt_segment black 092 "%(!.%{%F{purple}%}.)$COMP"
+        export PROMP_COLOR='092' 
       else
         prompt_segment black blue "%(!.%{%F{yellow}%}.)$COMP"
         export PROMP_COLOR='blue' 
