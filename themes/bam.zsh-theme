@@ -135,7 +135,7 @@ prompt_context() {
 
 # Dir: current working directory
 prompt_dir() {
-    prompt_segment $PROMP_COLOR black '%~'
+    prompt_segment $PROMP_COLOR black ' %~'
 }
 
 # Virtualenv: current working virtualenv
