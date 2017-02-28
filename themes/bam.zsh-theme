@@ -197,14 +197,14 @@ prompt_git() {
 
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
-              if [[ ! $MUX ]]; then
-                  mode=" ${p}%1{⬆︎%}"
+              if [[ ! $TMUX ]]; then
+                  mode=" ${p}%1{⬆︎%} "
               else
                   mode=" ${p}%2{⬆︎%}"
               fi
           elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
               p=$((behind))
-              if [[ ! $MUX ]]; then
+              if [[ ! $TMUX ]]; then
                   mode=" %1{⬇︎%} ${p}"
               else
                   mode=" %2{⬇︎%} ${p}"
