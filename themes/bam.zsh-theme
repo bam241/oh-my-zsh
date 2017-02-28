@@ -35,7 +35,7 @@ CURRENT_BG='NONE'
 # Special Powerline characters
 
 () {
-local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+local LC_ALL="en_US.UTF-8" LC_CTYPE="en_US.UTF-8"
 # NOTE: This segment separator character is correct.  In 2012, Powerline changed
 # the code points they use for their special characters. This is the new code point.
 # If this is not working for you, you probably have an old version of the
@@ -162,64 +162,63 @@ prompt_status() {
 
 # Git: branch/detached head, dirty status
 prompt_git() {
-    local PL_BRANCH_CHAR
-    () {
-    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+  local PL_BRANCH_CHAR() {
+    local LC_ALL="en_US.UTF-8" LC_CTYPE="en_US.UTF-8"
     PL_BRANCH_CHAR=$' \ue0a0'         # 
-}
-local ref dirty mode repo_path
-repo_path=$(git rev-parse --git-dir 2>/dev/null)
+  }
+  local ref dirty mode repo_path
+  repo_path=$(git rev-parse --git-dir 2>/dev/null)
 
-if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+  if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
 
-    #   tmp=`git fetch --all`
-    dirty=$(parse_git_dirty)
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
-    if [[ -n $dirty ]]; then
-        prompt_segment yellow black
-    else
-        prompt_segment green black
-    fi
+      #   tmp=`git fetch --all`
+      dirty=$(parse_git_dirty)
+      ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
+      if [[ -n $dirty ]]; then
+          prompt_segment yellow black
+      else
+          prompt_segment green black
+      fi
 
-    if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-        mode=" <B>"
-    elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-        mode=" >M<"
-    elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-        mode=" >R>"
-    fi
+      if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+          mode=" <B>"
+      elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+          mode=" >M<"
+      elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+          mode=" >R>"
+      fi
 
-    local remote ahead behind git_remote_status git_remote_status_detailed p
-    remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
+      local remote ahead behind git_remote_status git_remote_status_detailed p
+      remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
 
-    if [[ -n ${remote} ]]; then
-        ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-        behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+      if [[ -n ${remote} ]]; then
+          ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+          behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
 
-        if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
-            p=$((ahead))
-            mode=" ${p}%1{⬆︎%}"
-        elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
-            p=$((behind))
-            mode=" %1{⬇︎%} ${p}"
-        elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
-            mode=" %1{↕%}"
-        fi
-    fi
+          if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
+              p=$((ahead))
+              mode=" ${p}%1{⬆︎%}"
+          elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
+              p=$((behind))
+              mode=" %1{⬇︎%} ${p}"
+          elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
+              mode=" %1{↕%}"
+          fi
+      fi
 
-    setopt promptsubst
-    autoload -Uz vcs_info
+      setopt promptsubst
+      autoload -Uz vcs_info
 
-    zstyle ':vcs_info:*' enable git
-    zstyle ':vcs_info:*' get-revision true
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' stagedstr '%1{✚%}'
-    zstyle ':vcs_info:*' unstagedstr '%1{●%}'
-    zstyle ':vcs_info:*' formats ' %u%c'
-    zstyle ':vcs_info:*' actionformats ' %u%c'
-    vcs_info
-    echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
-fi
+      zstyle ':vcs_info:*' enable git
+      zstyle ':vcs_info:*' get-revision true
+      zstyle ':vcs_info:*' check-for-changes true
+      zstyle ':vcs_info:*' stagedstr '%1{✚%}'
+      zstyle ':vcs_info:*' unstagedstr '%1{●%}'
+      zstyle ':vcs_info:*' formats ' %u%c'
+      zstyle ':vcs_info:*' actionformats ' %u%c'
+      vcs_info
+      echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
+  fi
 }
 
 
