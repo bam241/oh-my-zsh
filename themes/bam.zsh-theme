@@ -154,7 +154,7 @@ prompt_status() {
     local symbols
     symbols=()
     [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-    [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
+    [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}%⚡"
     [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
 
     [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
@@ -197,10 +197,10 @@ prompt_git() {
 
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
-              mode=" ${p}%1{⬆︎%}"
+              mode=" ${p}%2{⬆︎%}"
           elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
               p=$((behind))
-              mode=" %1{⬇︎%} ${p}"
+              mode=" %2{⬇︎%} ${p}"
           elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
               mode=" %1{↕%}"
           fi
