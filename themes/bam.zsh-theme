@@ -87,48 +87,48 @@ prompt_context() {
         COMP="%m"
     fi
 
-    export PROMP_COLOR='blue' 
+    export PROMP_COLOR='blue'
 
     if [[ $UID -ne 0 ]]; then # normal user
         if [[ "$USER" != "$DEFAULT_USER" ]]; then
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "[" 
+                prompt_segment black default "["
                 prompt_segment black yellow "$USER@$COMP"
-                prompt_segment black default "]" 
-                export PROMP_COLOR='092' 
+                prompt_segment black default "]"
+                export PROMP_COLOR='092'
             else
-                prompt_segment black default "[" 
+                prompt_segment black default "["
                 prompt_segment black yellow "$USER"
-                prompt_segment black default "]" 
-                export PROMP_COLOR='blue' 
+                prompt_segment black default "]"
+                export PROMP_COLOR='blue'
             fi
         else
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "[" 
+                prompt_segment black default "["
                 prompt_segment black yellow "$COMP"
-                prompt_segment black default "]" 
-                export PROMP_COLOR='092' 
+                prompt_segment black default "]"
+                export PROMP_COLOR='092'
             else
-                export PROMP_COLOR='blue' 
+                export PROMP_COLOR='blue'
             fi
         fi
     else # root
-        export PROMP_COLOR='red' 
+        export PROMP_COLOR='red'
         if [[ "$USER" != "$DEFAULT_USER" ]]; then
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "[" 
+                prompt_segment black default "["
                 prompt_segment black yellow "$USER@$COMP"
-                prompt_segment black default "]" 
+                prompt_segment black default "]"
             else
-                prompt_segment black default "[" 
+                prompt_segment black default "["
                 prompt_segment black yellow "$USER"
                 #prompt_segment black yellow "%(!.%{%F{red}%}.)$USER"
-                prompt_segment black default "]" 
+                prompt_segment black default "]"
             fi
         else
-            prompt_segment black default "[" 
+            prompt_segment black default "["
             prompt_segment black yellow "$COMP"
-            prompt_segment black default "]" 
+            prompt_segment black default "]"
         fi
     fi
 }
@@ -231,83 +231,83 @@ prompt_git() {
 
 
 # svn Prompt
-function svn_prompt() {
-    if svn_is_inside; then
-        local ref dirty
-        if svn_parse_dirty; then
-            dirty=$ZSH_THEME_SVN_PROMPT_DIRTY
-        fi
-        echo -n " $(svn_branch_name) $(svn_rev)$dirty"
-    fi
-}
-
-function svn_is_inside() {
-    if $(svn info >/dev/null 2>&1); then
-        return 0
-    fi
-    return 1
-}
-
-function svn_parse_dirty() {
-    if svn_is_inside; then
-        root=`svn info 2> /dev/null | sed -n 's/^Working Copy Root Path: //p'`
-        if $(svn status $root 2> /dev/null | grep -Eq '^\s*[ACDIM!?L]'); then
-            return 0
-        fi
-    fi
-    return 1
-}
-
-function svn_repo_name() {
-    if svn_is_inside; then
-        svn info | sed -n 's/Repository\ Root:\ .*\///p' | read SVN_ROOT
-        svn info | sed -n "s/URL:\ .*$SVN_ROOT\///p"
-    fi
-}
-
-function svn_branch_name() {
-    if svn_is_inside; then
-        svn info 2> /dev/null | \
-            awk -F/ \
-            '/^URL:/ { \
-            for (i=0; i<=NF; i++) { \
-                if ($i == "branches" || $i == "tags" ) { \
-                    print $(i+1); \
-                    break;\
-                }; \
-                if ($i == "trunk") { print $i; break; } \
-                } \
-            }'
-    fi
-}
-
-function svn_rev() {
-    if svn_is_inside; then
-        svn info 2> /dev/null | sed -n 's/Revision:\ //p'
-    fi
-}
-
-
-prompt_svn() {
-
-    local PL_BRANCH_CHAR
-    () {
-    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-    PL_BRANCH_CHAR=$'\ue0a0'         # 
-}
-if svn_is_inside; then
-    ZSH_THEME_SVN_PROMPT_DIRTY='±'
-    local ref dirty
-    if svn_parse_dirty; then
-        dirty=$ZSH_THEME_SVN_PROMPT_DIRTY
-        prompt_segment yellow black
-    else
-        prompt_segment green black
-    fi
-    echo -n "$PL_BRANCH_CHAR $(svn_branch_name) $(svn_rev)$dirty"
-fi
-
-}
+#function svn_prompt() {
+#    if svn_is_inside; then
+#        local ref dirty
+#        if svn_parse_dirty; then
+#            dirty=$ZSH_THEME_SVN_PROMPT_DIRTY
+#        fi
+#        echo -n " $(svn_branch_name) $(svn_rev)$dirty"
+#    fi
+#}
+#
+#function svn_is_inside() {
+#    if $(svn info >/dev/null 2>&1); then
+#        return 0
+#    fi
+#    return 1
+#}
+#
+#function svn_parse_dirty() {
+#    if svn_is_inside; then
+#        root=`svn info 2> /dev/null | sed -n 's/^Working Copy Root Path: //p'`
+#        if $(svn status $root 2> /dev/null | grep -Eq '^\s*[ACDIM!?L]'); then
+#            return 0
+#        fi
+#    fi
+#    return 1
+#}
+#
+#function svn_repo_name() {
+#    if svn_is_inside; then
+#        svn info | sed -n 's/Repository\ Root:\ .*\///p' | read SVN_ROOT
+#        svn info | sed -n "s/URL:\ .*$SVN_ROOT\///p"
+#    fi
+#}
+#
+#function svn_branch_name() {
+#    if svn_is_inside; then
+#        svn info 2> /dev/null | \
+#            awk -F/ \
+#            '/^URL:/ { \
+#            for (i=0; i<=NF; i++) { \
+#                if ($i == "branches" || $i == "tags" ) { \
+#                    print $(i+1); \
+#                    break;\
+#                }; \
+#                if ($i == "trunk") { print $i; break; } \
+#                } \
+#            }'
+#    fi
+#}
+#
+#function svn_rev() {
+#    if svn_is_inside; then
+#        svn info 2> /dev/null | sed -n 's/Revision:\ //p'
+#    fi
+#}
+#
+#
+#prompt_svn() {
+#
+#    local PL_BRANCH_CHAR
+#    () {
+#    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+#    PL_BRANCH_CHAR=$'\ue0a0'         # 
+#}
+#if svn_is_inside; then
+#    ZSH_THEME_SVN_PROMPT_DIRTY='±'
+#    local ref dirty
+#    if svn_parse_dirty; then
+#        dirty=$ZSH_THEME_SVN_PROMPT_DIRTY
+#        prompt_segment yellow black
+#    else
+#        prompt_segment green black
+#    fi
+#    echo -n "$PL_BRANCH_CHAR $(svn_branch_name) $(svn_rev)$dirty"
+#fi
+#
+#}
 
 
 ## Main prompt
@@ -323,7 +323,7 @@ build_prompt() {
 
 r_build_prompt() {
     prompt_git
-    prompt_svn
+ #   prompt_svn
 }
 
 
