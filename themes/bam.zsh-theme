@@ -31,23 +31,16 @@
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
 CURRENT_BG='NONE'
+PRIMARY_FG=black
 
-# Special Powerline characters
-
-() {
-local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-# NOTE: This segment separator character is correct.  In 2012, Powerline changed
-# the code points they use for their special characters. This is the new code point.
-# If this is not working for you, you probably have an old version of the
-# Powerline-patched fonts installed. Download and install the new version.
-# Do not submit PRs to change this unless you have reviewed the Powerline code point
-# history and have new information.
-# This is defined using a Unicode escape sequence so it is unambiguously readable, regardless of
-# what font the user is viewing this source code in. Do not replace the
-# escape sequence with a single literal character.
-# Do not change this! Do not make it '\u2b80'; that is the old, wrong code point.
-SEGMENT_SEPARATOR=$'\ue0b0'
-}
+# Characters
+SEGMENT_SEPARATOR="%1{\ue0b0%}"
+PLUSMINUS="%1{\u00b1%}"
+BRANCH="%1{\ue0a0%}"
+DETACHED="%1{\u27a6%}"
+CROSS="%1{\u2718%}"
+LIGHTNING="%1{\u26a1%}"
+GEAR="%1{\u2699%}"
 
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
@@ -57,24 +50,27 @@ prompt_segment() {
     [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
     [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
     if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-        echo -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
+        echo -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%}"
     else
-        echo -n "%{$bg%}%{$fg%} "
+        echo -n "%{$bg%}%{$fg%}"
     fi
     CURRENT_BG=$1
-    [[ -n $3 ]] && echo -n $3
+    [[ -n $3 ]] && print -n $3
 }
+
 
 # End the prompt, closing any open segments
 prompt_end() {
     if [[ -n $CURRENT_BG ]]; then
-        echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+        echo -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
     else
         echo -n "%{%k%}"
     fi
-    echo -n "%{%f%}"
+    print -n "%{%f%}"
     CURRENT_BG=''
 }
+
+
 
 ### Prompt components
 # Each component will draw itself, and hide itself if no information needs to be shown
@@ -132,9 +128,13 @@ prompt_context() {
     fi
 }
 
+function collapse_pwd {
+        echo $(pwd | sed -e "s,^$HOME,~,")
+}
+
 # Dir: current working directory
 prompt_dir() {
-    prompt_segment $PROMP_COLOR black ' %~'
+    prompt_segment ${PROMP_COLOR} black ' %~ '
 }
 
 # Virtualenv: current working virtualenv
@@ -217,13 +217,6 @@ prompt_git() {
       setopt promptsubst
       autoload -Uz vcs_info
 
-      zstyle ':vcs_info:*' enable git
-      zstyle ':vcs_info:*' get-revision true
-      zstyle ':vcs_info:*' check-for-changes true
-      zstyle ':vcs_info:*' stagedstr '%1{✚%}'
-      zstyle ':vcs_info:*' unstagedstr '%1{●%}'
-      zstyle ':vcs_info:*' formats ' %u%c'
-      zstyle ':vcs_info:*' actionformats ' %u%c'
       vcs_info
       echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
   fi
@@ -313,6 +306,7 @@ prompt_git() {
 ## Main prompt
 build_prompt() {
     RETVAL=$?
+    CURRENT_BG='NONE'
     prompt_status
     #prompt_virtualenv
     prompt_context
@@ -326,8 +320,27 @@ r_build_prompt() {
  #   prompt_svn
 }
 
+prompt_setup() {
+    autoload -Uz add-zsh-hook
+    autoload -Uz vcs_info
 
+    prompt_opts=(cr subst percent)
 
-PROMPT='%{%f%b%k%}$(build_prompt)'
+    add-zsh-hook precmd prompt_precmd
 
-RPS1='$(r_build_prompt) '
+      zstyle ':vcs_info:*' enable git
+      zstyle ':vcs_info:*' get-revision true
+      zstyle ':vcs_info:*' check-for-changes true
+      zstyle ':vcs_info:*' stagedstr '%1{✚%}'
+      zstyle ':vcs_info:*' unstagedstr '%1{●%}'
+      zstyle ':vcs_info:*' formats ' %u%c'
+      zstyle ':vcs_info:*' actionformats ' %u%c'
+}
+
+prompt_precmd() {
+    vcs_info
+    PROMPT='%{%f%b%k%}$(build_prompt)'
+    RPS1='$(r_build_prompt) '
+}
+
+prompt_setup "$@"
