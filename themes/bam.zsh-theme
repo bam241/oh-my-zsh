@@ -35,7 +35,7 @@ CURRENT_BG='NONE'
 # Special Powerline characters
 
 () {
-local LC_ALL="en_US.UTF-8" LC_CTYPE="en_US.UTF-8"
+local LC_ALL="" LC_CTYPE="en_US.UTF-8"
 # NOTE: This segment separator character is correct.  In 2012, Powerline changed
 # the code points they use for their special characters. This is the new code point.
 # If this is not working for you, you probably have an old version of the
@@ -162,8 +162,9 @@ prompt_status() {
 
 # Git: branch/detached head, dirty status
 prompt_git() {
-  local PL_BRANCH_CHAR() {
-    local LC_ALL="en_US.UTF-8" LC_CTYPE="en_US.UTF-8"
+  local PL_BRANCH_CHAR
+  () {
+    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
     PL_BRANCH_CHAR=$' \ue0a0'         # 
   }
   local ref dirty mode repo_path
