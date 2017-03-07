@@ -53,14 +53,13 @@ SEGMENT_SEPARATOR=$'\ue0b0'
 # Takes two arguments, background and foreground. Both can be omitted,
 # rendering default background/foreground.
 prompt_segment() {
-
     local bg fg
     [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
     [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
     if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-        echo -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%}"
+        echo -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
     else
-        echo -n "%{$bg%}%{$fg%}"
+        echo -n "%{$bg%}%{$fg%} "
     fi
     CURRENT_BG=$1
     [[ -n $3 ]] && echo -n $3
@@ -139,12 +138,12 @@ prompt_dir() {
 }
 
 # Virtualenv: current working virtualenv
-prompt_virtualenv() {
-    local virtualenv_path="$VIRTUAL_ENV"
-    if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-        prompt_segment $PROMP_COLOR black "(`basename $virtualenv_path`)"
-    fi
-}
+#prompt_virtualenv() {
+#    local virtualenv_path="$VIRTUAL_ENV"
+#    if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
+#        prompt_segment $PROMP_COLOR black "(`basename $virtualenv_path`)"
+#    fi
+#}
 
 # Status:
 # - was there an error
@@ -315,7 +314,7 @@ prompt_git() {
 build_prompt() {
     RETVAL=$?
     prompt_status
-    prompt_virtualenv
+    #prompt_virtualenv
     prompt_context
     prompt_dir
     prompt_end
