@@ -66,7 +66,7 @@ prompt_end() {
     else
         echo -n "%{%k%}"
     fi
-    print -n "%{%f%}"
+    print -n "%{%f%} "
     CURRENT_BG=''
 }
 
@@ -128,9 +128,6 @@ prompt_context() {
     fi
 }
 
-function collapse_pwd {
-        echo $(pwd | sed -e "s,^$HOME,~,")
-}
 
 # Dir: current working directory
 prompt_dir() {
@@ -197,7 +194,7 @@ prompt_git() {
 
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
-              if [[ ! $TMUX ]]; then
+              if [[ ! $TMUX ]]  || [[ $COMP == 'kermit'  ]]; then
                   mode=" ${p}%1{⬆︎%} "
               else
                   mode=" ${p}%2{⬆︎%}"
