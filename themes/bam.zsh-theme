@@ -63,21 +63,21 @@ prompt_context() {
     if [[ $UID -ne 0 ]]; then # normal user
         if [[ "$USER" != "$DEFAULT_USER" ]]; then
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "["
-                prompt_segment black yellow "$USER@$COMP"
-                prompt_segment black default "]"
+                prompt_segment black default "%{[%}"
+                prompt_segment black yellow "%{$USER@$COMP%}"
+                prompt_segment black default "%{]%}"
                 export PROMP_COLOR='092'
             else
-                prompt_segment black default "["
-                prompt_segment black yellow "$USER"
-                prompt_segment black default "]"
+                prompt_segment black default "%{[%}"
+                prompt_segment black yellow "%{$USER%}"
+                prompt_segment black default "%{]%}"
                 export PROMP_COLOR='blue'
             fi
         else
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "["
-                prompt_segment black yellow "$COMP"
-                prompt_segment black default "]"
+                prompt_segment black default "%{[%}"
+                prompt_segment black yellow "%{$COMP%}"
+                prompt_segment black default "%{]%}"
                 export PROMP_COLOR='092'
             else
                 export PROMP_COLOR='blue'
@@ -87,18 +87,18 @@ prompt_context() {
         export PROMP_COLOR='red'
         if [[ "$USER" != "$DEFAULT_USER" ]]; then
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "["
-                prompt_segment black yellow "$USER@$COMP"
-                prompt_segment black default "]"
+                prompt_segment black default "%{[%}"
+                prompt_segment black yellow "%{$USER@$COMP%}"
+                prompt_segment black default "%{]%}"
             else
-                prompt_segment black default "["
-                prompt_segment black yellow "$USER"
-                prompt_segment black default "]"
+                prompt_segment black default "%{[%}"
+                prompt_segment black yellow "%{$USER%}"
+                prompt_segment black default "%{]%}"
             fi
         else
-            prompt_segment black default "["
-            prompt_segment black yellow "$COMP"
-            prompt_segment black default "]"
+              prompt_segment black default "%{[%}"
+              prompt_segment black yellow "%{$COMP%}"
+              prompt_segment black default "%{]%}"
         fi
     fi
 }
@@ -117,9 +117,9 @@ prompt_dir() {
 prompt_status() {
     local symbols
     symbols=()
-    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS"
-    [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}%$LIGHTNING"
-    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$GEAR"
+    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}%{$CROSS%}"
+    [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}%{$LIGHTNING%}"
+    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}%{$GEAR%}"
 
     [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
 }
@@ -161,27 +161,29 @@ prompt_git() {
       remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
 
       if [[ -n ${remote} ]]; then
-          #ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-          #behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
           ahead=$(git_commits_ahead)
           behind=$(git_commits_behind)
 
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
               if [[ ! $TMUX ]]  || [[ $COMP == 'kermit'  ]]; then
-                  mode=" ${p}%1{⬆︎%} "
+                  mode=" %{${p}%} +" 
+                  #⬆︎ "
               else
-                  mode=" ${p}%2{⬆︎%}"
+                  mode=" ${p}%} +" 
+                  #⬆︎ "
               fi
           elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
               p=$((behind))
               if [[ ! $TMUX ]]; then
-                  mode=" %1{⬇︎%} ${p}"
+                  #mode=" ⬇︎ %{${p}%}"
+                  mode=" - %{${p}%}"
               else
-                  mode=" %2{⬇︎%} ${p}"
+                  #mode=" ⬇︎ %{${p}%}"
+                  mode=" - %{${p}%}"
               fi
           elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
-              mode=" %1{↕%}"
+              mode=" ↕"
           fi
       fi
 
