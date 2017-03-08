@@ -2,30 +2,6 @@
 
 # vim:ft=zsh ts=2 sw=2 sts=2
 #
-# agnoster's Theme - https://gist.github.com/3709274
-# A Powerline-inspired theme for ZSH
-#
-# # README
-#
-# In order for this theme to render correctly, you will need a
-# [Powerline-patched font](https://github.com/Lokaltog/powerline-fonts).
-# Make sure you have a recent version: the code points that Powerline
-# uses changed in 2012, and older versions will display incorrectly,
-# in confusing ways.
-#
-# In addition, I recommend the
-# [Solarized theme](https://github.com/altercation/solarized/) and, if you're
-# using it on Mac OS X, [iTerm 2](http://www.iterm2.com/) over Terminal.app -
-# it has significantly better color fidelity.
-#
-# # Goals
-#
-# The aim of this theme is to only show you *relevant* information. Like most
-# prompts, it will only show git information when in a git working directory.
-# However, it goes a step further: everything from the current user and
-# hostname to whether the last call exited with an error to whether background
-# jobs are running in this shell will all be displayed automatically when
-# appropriate.
 
 ### Segment drawing
 # A few utility functions to make it easy and re-usable to draw segmented prompts
@@ -34,13 +10,13 @@ CURRENT_BG='NONE'
 PRIMARY_FG=black
 
 # Characters
-SEGMENT_SEPARATOR="%1{\ue0b0%}"
-PLUSMINUS="%1{\u00b1%}"
-BRANCH="%1{\ue0a0%}"
-DETACHED="%1{\u27a6%}"
-CROSS="%1{\u2718%}"
-LIGHTNING="%1{\u26a1%}"
-GEAR="%1{\u2699%}"
+SEGMENT_SEPARATOR="\ue0b0"
+PLUSMINUS="\u00b1"
+BRANCH="\ue0a0"
+DETACHED="\u27a6"
+CROSS="\u2718"
+LIGHTNING="\u26a1"
+GEAR="\u2699"
 
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
@@ -117,7 +93,6 @@ prompt_context() {
             else
                 prompt_segment black default "["
                 prompt_segment black yellow "$USER"
-                #prompt_segment black yellow "%(!.%{%F{red}%}.)$USER"
                 prompt_segment black default "]"
             fi
         else
@@ -134,13 +109,6 @@ prompt_dir() {
     prompt_segment ${PROMP_COLOR} black ' %~ '
 }
 
-# Virtualenv: current working virtualenv
-#prompt_virtualenv() {
-#    local virtualenv_path="$VIRTUAL_ENV"
-#    if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-#        prompt_segment $PROMP_COLOR black "(`basename $virtualenv_path`)"
-#    fi
-#}
 
 # Status:
 # - was there an error
@@ -149,9 +117,9 @@ prompt_dir() {
 prompt_status() {
     local symbols
     symbols=()
-    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-    [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}%⚡"
-    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
+    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS"
+    [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}%$LIGHTNING"
+    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$GEAR"
 
     [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
 }
@@ -163,7 +131,11 @@ prompt_git() {
     local LC_ALL="" LC_CTYPE="en_US.UTF-8"
     PL_BRANCH_CHAR=$' \ue0a0'         # 
   }
-  local ref dirty mode repo_path
+  
+  local color ref
+  is_dirty() {
+    test -n "$(git status --porcelain --ignore-submodules)"
+  }
   repo_path=$(git rev-parse --git-dir 2>/dev/null)
 
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
@@ -171,7 +143,7 @@ prompt_git() {
       #   tmp=`git fetch --all`
       dirty=$(parse_git_dirty)
       ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
-      if [[ -n $dirty ]]; then
+      if is_dirty; then
           prompt_segment yellow black
       else
           prompt_segment green black
@@ -189,8 +161,10 @@ prompt_git() {
       remote=${$(command git rev-parse --verify ${hook_com[branch]}@{upstream} --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
 
       if [[ -n ${remote} ]]; then
-          ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-          behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+          #ahead=$(command git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+          #behind=$(command git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+          ahead=$(git_commits_ahead)
+          behind=$(git_commits_behind)
 
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
