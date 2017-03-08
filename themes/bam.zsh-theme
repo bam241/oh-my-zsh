@@ -63,21 +63,21 @@ prompt_context() {
     if [[ $UID -ne 0 ]]; then # normal user
         if [[ "$USER" != "$DEFAULT_USER" ]]; then
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "%{[%}"
-                prompt_segment black yellow "%{$USER@$COMP%}"
-                prompt_segment black default "%{]%}"
+                prompt_segment black default "["
+                prompt_segment black yellow "$USER@$COMP"
+                prompt_segment black default "]"
                 export PROMP_COLOR='092'
             else
-                prompt_segment black default "%{[%}"
-                prompt_segment black yellow "%{$USER%}"
-                prompt_segment black default "%{]%}"
+                prompt_segment black default "["
+                prompt_segment black yellow "$USER"
+                prompt_segment black default "]"
                 export PROMP_COLOR='blue'
             fi
         else
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "%{[%}"
-                prompt_segment black yellow "%{$COMP%}"
-                prompt_segment black default "%{]%}"
+                prompt_segment black default "["
+                prompt_segment black yellow "$COMP"
+                prompt_segment black default "]"
                 export PROMP_COLOR='092'
             else
                 export PROMP_COLOR='blue'
@@ -87,18 +87,18 @@ prompt_context() {
         export PROMP_COLOR='red'
         if [[ "$USER" != "$DEFAULT_USER" ]]; then
             if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-                prompt_segment black default "%{[%}"
-                prompt_segment black yellow "%{$USER@$COMP%}"
-                prompt_segment black default "%{]%}"
+                prompt_segment black default "["
+                prompt_segment black yellow "$USER@$COMP"
+                prompt_segment black default "]"
             else
-                prompt_segment black default "%{[%}"
-                prompt_segment black yellow "%{$USER%}"
-                prompt_segment black default "%{]%}"
+                prompt_segment black default "["
+                prompt_segment black yellow "$USER"
+                prompt_segment black default "]"
             fi
         else
-              prompt_segment black default "%{[%}"
-              prompt_segment black yellow "%{$COMP%}"
-              prompt_segment black default "%{]%}"
+              prompt_segment black default "["
+              prompt_segment black yellow "$COMP"
+              prompt_segment black default "]"
         fi
     fi
 }
