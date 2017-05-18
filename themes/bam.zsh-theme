@@ -182,7 +182,10 @@ prompt_git() {
               fi
           elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
               mode=" ↕"
+          elif [[ $ahead -eq 0 ]] && [[ $behind -eq 0 ]]; then
+              mode="  "
           fi
+
       fi
 
       setopt promptsubst
