@@ -10,13 +10,13 @@ CURRENT_BG='NONE'
 PRIMARY_FG=black
 
 # Characters
-SEGMENT_SEPARATOR="\ue0b0"
-PLUSMINUS="\u00b1"
-BRANCH="\ue0a0"
-DETACHED="\u27a6"
-CROSS="\u2718"
-LIGHTNING="\u26a1"
-GEAR="\u2699"
+SEGMENT_SEPARATOR="%2{\ue0b0%}"
+PLUSMINUS="%2{\u00b1%}"
+BRANCH="%2{\ue0a0%}"
+DETACHED="%2{\u27a6%}"
+CROSS="%2{\u2718%}"
+LIGHTNING="%2{\u26a1%}"
+GEAR="%2{\u2699%}"
 
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
@@ -42,7 +42,7 @@ prompt_end() {
     else
         echo -n "%{%k%}"
     fi
-    print -n "%{%f%} "
+    print -n "%{%f%}"
     CURRENT_BG=''
 }
 
@@ -167,17 +167,17 @@ prompt_git() {
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
               if [[ ! $TMUX ]]  || [[ $COMP == 'kermit'  ]]; then
-                  mode=" ${p}⬆︎ "
+                  mode=" ${p}%2{⬆︎}"
               else
-                  mode=" ${p}⬆︎ "
+                  mode=" ${p}%2{⬆︎}"
               fi
           elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
               p=$((behind))
               if [[ ! $TMUX ]]; then
-                  mode="⬇︎ ${p}"
+                  mode="%2{⬇︎} ${p}"
                   #mode=" - %{${p}%}"
               else
-                  mode="⬇︎ ${p}"
+                  mode="%2{⬇︎} ${p}"
                   #mode=" - %{${p}%}"
               fi
           elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
@@ -302,8 +302,8 @@ prompt_setup() {
       zstyle ':vcs_info:*' enable git
       zstyle ':vcs_info:*' get-revision true
       zstyle ':vcs_info:*' check-for-changes true
-      zstyle ':vcs_info:*' stagedstr '%1{✚%}'
-      zstyle ':vcs_info:*' unstagedstr '%1{●%}'
+      zstyle ':vcs_info:*' stagedstr '%2{✚ %}'
+      zstyle ':vcs_info:*' unstagedstr '%2{●%}'
       zstyle ':vcs_info:*' formats ' %u%c'
       zstyle ':vcs_info:*' actionformats ' %u%c'
 }
@@ -311,7 +311,7 @@ prompt_setup() {
 prompt_precmd() {
     vcs_info
     PROMPT='%{%f%b%k%}$(build_prompt)'
-    RPS1='$(r_build_prompt) '
+    RPS1='$(r_build_prompt)'
 }
 
 prompt_setup "$@"
