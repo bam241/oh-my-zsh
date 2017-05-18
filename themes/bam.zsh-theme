@@ -167,9 +167,9 @@ prompt_git() {
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
               if [[ ! $TMUX ]]  || [[ $COMP == 'kermit'  ]]; then
-                  mode=" ${p}%2{⬆︎%}"
+                  mode=" ${p}%2{⬆︎%} "
               else
-                  mode=" ${p}%2{⬆︎%}"
+                  mode=" ${p}%2{⬆︎%} "
               fi
           elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
               p=$((behind))
