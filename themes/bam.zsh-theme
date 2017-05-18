@@ -183,7 +183,7 @@ prompt_git() {
           elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
               mode=" ↕"
           elif [[ $ahead -eq 0 ]] && [[ $behind -eq 0 ]]; then
-              mode="  "
+              mode=" %2{ %} "
           fi
 
       fi
