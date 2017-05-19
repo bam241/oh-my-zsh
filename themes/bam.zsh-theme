@@ -10,13 +10,13 @@ CURRENT_BG='NONE'
 PRIMARY_FG=black
 
 # Characters
-SEGMENT_SEPARATOR="%2{\ue0b0%}"
-PLUSMINUS="%2{\u00b1%}"
-BRANCH="%2{\ue0a0%}"
-DETACHED="%2{\u27a6%}"
-CROSS="%2{\u2718%}"
-LIGHTNING="%2{\u26a1%}"
-GEAR="%2{\u2699%}"
+SEGMENT_SEPARATOR="%1{\ue0b0%}"
+PLUSMINUS="%1{\u00b1%}"
+BRANCH="%1{\ue0a0%}"
+DETACHED="%1{\u27a6%}"
+CROSS="%1{\u2718%}"
+LIGHTNING="%1{\u26a1%}"
+GEAR="%1{\u2699%}"
 
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
@@ -167,23 +167,23 @@ prompt_git() {
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
               if [[ ! $TMUX ]]  || [[ $COMP == 'kermit'  ]]; then
-                  mode=" ${p}%2{⬆︎%} "
+                  mode=" ${p}%1{⬆︎%} "
               else
-                  mode=" ${p}%2{⬆︎%} "
+                  mode=" ${p}%1{⬆︎%} "
               fi
           elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
               p=$((behind))
               if [[ ! $TMUX ]]; then
-                  mode="%2{⬇︎%} ${p}"
+                  mode="%1{⬇︎%} ${p}"
                   #mode=" - %{${p}%}"
               else
-                  mode="%2{⬇︎%} ${p}"
+                  mode="%1{⬇︎%} ${p}"
                   #mode=" - %{${p}%}"
               fi
           elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
               mode=" ↕"
           elif [[ $ahead -eq 0 ]] && [[ $behind -eq 0 ]]; then
-              mode="%2{ %}"
+              mode="%1{ %}"
           fi
 
       fi
@@ -305,8 +305,8 @@ prompt_setup() {
       zstyle ':vcs_info:*' enable git
       zstyle ':vcs_info:*' get-revision true
       zstyle ':vcs_info:*' check-for-changes true
-      zstyle ':vcs_info:*' stagedstr '%2{✚ %}'
-      zstyle ':vcs_info:*' unstagedstr '%2{●%}'
+      zstyle ':vcs_info:*' stagedstr '%1{✚ %}'
+      zstyle ':vcs_info:*' unstagedstr '%1{●%}'
       zstyle ':vcs_info:*' formats ' %u%c'
       zstyle ':vcs_info:*' actionformats ' %u%c'
 }
