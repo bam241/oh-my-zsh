@@ -42,7 +42,7 @@ prompt_end() {
     else
         echo -n "%{%k%}"
     fi
-    print -n "%{%f%}"
+    print -n "%{%f%} "
     CURRENT_BG=''
 }
 
