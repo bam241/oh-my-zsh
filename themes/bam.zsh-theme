@@ -185,7 +185,8 @@ prompt_git() {
           elif [[ $ahead -eq 0 ]] && [[ $behind -eq 0 ]]; then
               mode="%1{ %}"
           fi
-
+      else
+          mode=" "
       fi
 
       setopt promptsubst
@@ -305,7 +306,7 @@ prompt_setup() {
       zstyle ':vcs_info:*' enable git
       zstyle ':vcs_info:*' get-revision true
       zstyle ':vcs_info:*' check-for-changes true
-      zstyle ':vcs_info:*' stagedstr '%1{✚ %}'
+      zstyle ':vcs_info:*' stagedstr '%1{✚%}'
       zstyle ':vcs_info:*' unstagedstr '%1{●%}'
       zstyle ':vcs_info:*' formats ' %u%c'
       zstyle ':vcs_info:*' actionformats ' %u%c'
