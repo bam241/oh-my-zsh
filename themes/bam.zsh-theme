@@ -131,7 +131,7 @@ prompt_git() {
     local LC_ALL="" LC_CTYPE="en_US.UTF-8"
     PL_BRANCH_CHAR=$' \ue0a0'         # 
   }
-  
+
   local color ref
   is_dirty() {
     test -n "$(git status --porcelain --ignore-submodules)"
@@ -166,20 +166,10 @@ prompt_git() {
 
           if [[ $ahead -gt 0 ]] && [[ $behind -eq 0 ]]; then
               p=$((ahead))
-              if [[ ! $TMUX ]]  || [[ $COMP == 'kermit'  ]]; then
-                  mode=" ${p}%1{⬆︎%} "
-              else
-                  mode=" ${p}%1{⬆︎%} "
-              fi
+              mode=" ${p}%1{⬆︎%} "
           elif [[ $behind -gt 0 ]] && [[ $ahead -eq 0 ]]; then
               p=$((behind))
-              if [[ ! $TMUX ]]; then
-                  mode="%1{⬇︎%} ${p}"
-                  #mode=" - %{${p}%}"
-              else
-                  mode="%1{⬇︎%} ${p}"
-                  #mode=" - %{${p}%}"
-              fi
+              mode=" %1{⬇︎%} ${p} "
           elif [[ $ahead -gt 0 ]] && [[ $behind -gt 0 ]]; then
               mode=" ↕"
           elif [[ $ahead -eq 0 ]] && [[ $behind -eq 0 ]]; then
