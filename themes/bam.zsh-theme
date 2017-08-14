@@ -92,12 +92,12 @@ prompt_context() {
                 prompt_segment black default "]"
             else
                 prompt_segment black default "["
-                prompt_segment black yellow "$USER"
+                prompt_segment black red  "$USER"
                 prompt_segment black default "]"
             fi
         else
               prompt_segment black default "["
-              prompt_segment black yellow "$COMP"
+              prompt_segment black red "$COMP"
               prompt_segment black default "]"
         fi
     fi
