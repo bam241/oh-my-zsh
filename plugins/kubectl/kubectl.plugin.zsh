@@ -38,7 +38,7 @@ alias kdp='kubectl describe pods'
 alias kdelp='kubectl delete pods'
 
 # get pod by label: kgpl "app=myapp" -n myns
-alias kgpl='function _kgpl(){ label=$1; shift; kgp -l $label $*; };_kgpl'
+alias kgpl='kgp -l'
 
 # Service management.
 alias kgs='kubectl get svc'
@@ -59,6 +59,7 @@ alias kgns='kubectl get namespaces'
 alias kens='kubectl edit namespace'
 alias kdns='kubectl describe namespace'
 alias kdelns='kubectl delete namespace'
+alias kcn='kubectl config set-context $(kubectl config current-context) --namespace'
 
 # ConfigMap management
 alias kgcm='kubectl get configmaps'
@@ -80,6 +81,9 @@ alias kdd='kubectl describe deployment'
 alias kdeld='kubectl delete deployment'
 alias ksd='kubectl scale deployment'
 alias krsd='kubectl rollout status deployment'
+kres(){
+    kubectl set env $@ REFRESHED_AT=$(date +%Y%m%d%H%M%S)
+}
 
 # Rollout management.
 alias kgrs='kubectl get rs'
