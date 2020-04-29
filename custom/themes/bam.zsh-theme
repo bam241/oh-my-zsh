@@ -298,7 +298,7 @@ prompt_setup() {
       zstyle ':vcs_info:*' get-revision true
       zstyle ':vcs_info:*' check-for-changes true
       zstyle ':vcs_info:*' stagedstr '%1{✚%}'
-      zstyle ':vcs_info:*' unstagedstr '%1{●%}'
+      zstyle ':vcs_info:*' unstagedstr '%1{⚙%}'
       zstyle ':vcs_info:*' formats ' %u%c'
       zstyle ':vcs_info:*' actionformats ' %u%c'
 }
