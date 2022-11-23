@@ -5,3 +5,6 @@ cache/
 log/
 *.swp
 .DS_Store
+
+# editor configs
+.vscode

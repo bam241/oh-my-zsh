@@ -82,5 +82,30 @@ zsh-pip-test-clean-packages() {
     fi
 }
 
-alias pip="noglob pip" # allows square brackets for pip command invocation
+if (( $+commands[pip3] && !$+commands[pip] )); then
+  alias pip="noglob pip3"
+else
+  alias pip="noglob pip"
+fi
 
+# Create requirements file
+alias pipreq="pip freeze > requirements.txt"
+
+# Install packages from requirements file
+alias pipir="pip install -r requirements.txt"
+
+# Upgrade all installed packages
+function pipupall {
+  # non-GNU xargs does not support nor need `--no-run-if-empty`
+  local xargs="xargs --no-run-if-empty"
+  xargs --version 2>/dev/null | grep -q GNU || xargs="xargs"
+  pip list --outdated | awk 'NR > 2 { print $1 }' | ${=xargs} pip install --upgrade
+}
+
+# Uninstalled all installed packages
+function pipunall {
+  # non-GNU xargs does not support nor need `--no-run-if-empty`
+  local xargs="xargs --no-run-if-empty"
+  xargs --version 2>/dev/null | grep -q GNU || xargs="xargs"
+  pip list --format freeze | cut -d= -f1 | ${=xargs} pip uninstall
+}
